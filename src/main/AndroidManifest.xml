@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Merged into the consumer app. A dashboard should host the client in this foreground service
+         so reception survives the app being backgrounded. connectedDevice = data from the vehicle. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <!-- Android 14 (targetSDK 34) gates the connectedDevice FGS type behind ANY-OF a companion
+         permission set; without one, startForeground() throws SecurityException and the process
+         crash-loops. CHANGE_NETWORK_STATE is a normal (install-time, auto-granted) member of that
+         set, so it satisfies the gate with no runtime prompt. -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application>
+        <service
+            android:name="co.screenmate.can.privileged.PrivilegedSignalService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+    </application>
+</manifest>
